@@ -15,20 +15,13 @@ on:
 jobs:
   Build:
     runs-on: ubuntu-latest
-    outputs:
-      output1: ${{ steps.set_outputs.outputs.event_name }}
-      output2: ${{ steps.set_outputs.outputs.ref }}
-      output3: ${{ steps.set_outputs.outputs.repository_branch }}
     steps:
+      - run: |
+          echo "name of the event that triggered the workflow: ${{ github.event_name }}"
+          echo "name of the branch that the repository is currently referencing: ${{ github.ref }}"
+          echo "name of the repository: ${{ github.repository }} on branch: ${{ github.ref }}"
+
       - uses: actions/checkout@v3.3.0
-
-      - name: Set outputs
-        id: set_outputs
-        run: |
-          echo "event_name=${{ github.event_name }}" >> $GITHUB_OUTPUT
-          echo "ref=${{ github.ref }}" >> $GITHUB_OUTPUT
-          echo "repository_branch=${{ github.repository }} branch ${{ github.ref }}" >> $GITHUB_OUTPUT
-
       - name: List files in the repository
         run: |
           echo "The repository ${{ github.repository }} contains the following files:"
