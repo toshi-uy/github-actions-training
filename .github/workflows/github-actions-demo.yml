@@ -2,26 +2,34 @@ name: GitHub Actions Demo
 on:
   push:
     branches:
-    - main
+      - main
     paths-ignore:
-    - /.github
+      - /.github
   pull_request:
-        branches:
-        - main
+    branches:
+      - main
   schedule:
     - cron: "15 6 * * 0"
   workflow_dispatch:
+
 jobs:
   Build:
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.set_outputs.outputs.event_name }}
+      output2: ${{ steps.set_outputs.outputs.ref }}
+      output3: ${{ steps.set_outputs.outputs.repository_branch }}
     steps:
-      - run: |
-          echo "event_name=${{ github.event_name }}"
-          echo "ref=${{ github.ref }}"
-          echo "repository_branch=${{ github.repository }} branch ${{ github.ref }}"
       - uses: actions/checkout@v3.3.0
+
+      - name: Set outputs
+        id: set_outputs
+        run: |
+          echo "event_name=${{ github.event_name }}" >> $GITHUB_OUTPUT
+          echo "ref=${{ github.ref }}" >> $GITHUB_OUTPUT
+          echo "repository_branch=${{ github.repository }} branch ${{ github.ref }}" >> $GITHUB_OUTPUT
+
       - name: List files in the repository
         run: |
           echo "The repository ${{ github.repository }} contains the following files:"
           tree
-
